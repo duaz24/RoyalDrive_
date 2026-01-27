@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoyalDrive - Finalizar Reserva</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1 onclick="window.location.href='/'" style="cursor: pointer;">👑 RoyalDrive</h1>
+        <div id="user-area"></div>
+    </header>
+
+    <div class="container">
+        <h2 style="margin-bottom: 10px;">Confirmar a sua Reserva</h2>
+        <p style="color: #aaa; margin-bottom: 30px;">Verifique os detalhes e escolha as datas para prosseguir.</p>
+        
+        <div class="checkout-top-grid">
+            
+            <div id="info-carro" class="car-details-card">
+                <p style="padding: 40px;">A carregar detalhes do veículo...</p>
+            </div>
+
+            <div class="booking-card">
+                <h3>Agendar Aluguer</h3>
+                <form id="form-reserva" style="margin-top: 20px;">
+                    <label>Data de Levantamento</label>
+                    <input type="date" id="data_inicio" required>
+
+                    <label>Data de Devolução</label>
+                    <input type="date" id="data_fim" required>
+
+                    <div id="valor-total" class="total-display">
+                        Total: 0.00 €
+                    </div>
+
+                    <button type="submit" class="btn" style="width: 100%; padding: 18px; font-size: 1.1rem;">
+                        AVANÇAR PARA PAGAMENTO ➔
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="map-full-section" style="margin-top: 40px;">
+            <h3 style="font-size: 1.1rem; margin-bottom: 15px; color: #fff;">📍 Local de Levantamento</h3>
+            <div id="map-reserva"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="reservar.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBR8DozD9t-myaTNHdU6lB6XRxLI9IZTHk&callback=initMapReserva" async defer></script>
+</body>
+</html>

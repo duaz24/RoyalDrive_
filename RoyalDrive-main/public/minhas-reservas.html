@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Minhas Reservas - RoyalDrive</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .reserva-card {
+            background-color: #2d2d2d;
+            border-left: 5px solid #d4af37; /* Barra dourada à esquerda */
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .reserva-info h3 { margin: 0 0 10px 0; color: white; }
+        .reserva-info p { margin: 5px 0; color: #aaa; }
+        .status-badge {
+            background-color: #d4af37;
+            color: black;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 style="cursor: pointer;" onclick="window.location.href='/'">👑 RoyalDrive</h1>
+        <div id="user-area">
+            </div>
+    </header>
+
+    <div class="container">
+        <h2>O meu Histórico de Reservas</h2>
+        <div id="lista-reservas">
+            <p>A carregar histórico...</p>
+        </div>
+        <button class="btn" style="width: 200px; background-color: #444;" onclick="window.location.href='/'">Voltar à Frota</button>
+    </div>
+
+    <script src="minhas-reservas.js"></script>
+</body>
+</html>

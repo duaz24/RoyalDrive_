@@ -1,0 +1,416 @@
+/* =========================================
+   1. RESET E ESTILOS GERAIS
+   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #121212; /* Fundo Preto Suave */
+    color: #e0e0e0; /* Texto Branco Suave */
+    line-height: 1.6;
+    overflow-x: hidden; /* Evita barra de scroll lateral */
+}
+
+h1, h2, h3, h4 {
+    color: #d4af37; /* Dourado Royal */
+    margin-bottom: 10px;
+}
+
+a { text-decoration: none; color: inherit; transition: 0.3s; }
+ul { list-style: none; }
+
+/* =========================================
+   2. BOTÕES GERAIS
+   ========================================= */
+.btn {
+    display: inline-block;
+    background-color: #d4af37;
+    color: #000;
+    padding: 10px 25px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.95rem;
+    text-align: center;
+}
+
+.btn:hover {
+    background-color: #fff;
+    transform: scale(1.05);
+}
+
+.btn-outline {
+    border: 2px solid #d4af37;
+    color: #d4af37;
+    padding: 8px 25px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+.btn-outline:hover {
+    background: #d4af37;
+    color: black;
+}
+
+.btn-admin {
+    background-color: #800000;
+    color: white;
+    border: 1px solid #ff4444;
+}
+
+/* =========================================
+   3. LANDING PAGE (CAPA / HOME)
+   ========================================= */
+
+/* Header Transparente (Só aparece na Landing Page) */
+.landing-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+.logo-text {
+    font-size: 2rem;
+    color: #d4af37;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    font-weight: bold;
+}
+
+/* Hero Section (A Imagem Grande) */
+.hero-section {
+    position: relative;
+    width: 100%;
+    height: 85vh;
+    /* --- MUDANÇA AQUI: Novo link para uma imagem de um carro --- */
+    background-image: url('https://images.unsplash.com/photo-1617814076367-b759c7d7e738?q=80&w=1920'); /* BMW M4 Competition */
+    /* --------------------------------------------------------- */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #000; /* Cor de fundo de reserva caso a imagem falhe */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Sombra escura por cima da imagem */
+.hero-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.9));
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+    max-width: 800px;
+    padding: 20px;
+}
+
+.hero-content h1 {
+    font-size: 4rem;
+    color: white;
+    margin-bottom: 10px;
+    text-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+.hero-content p {
+    font-size: 1.5rem;
+    color: #f0f0f0;
+    margin-bottom: 40px;
+}
+
+/* Botão Grande "VER FROTA" */
+.btn-hero {
+    display: inline-block;
+    background-color: #d4af37;
+    color: #000;
+    padding: 18px 50px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 50px;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+.btn-hero:hover {
+    background-color: white;
+    transform: scale(1.05);
+}
+
+/* A Caixa Branca Flutuante (CORRIGIDA) */
+.features-overlap {
+    position: relative;
+    margin-top: -80px; /* Faz a caixa subir para cima da foto */
+    z-index: 20;
+    padding: 0 20px;
+    margin-bottom: 60px;
+}
+
+.features-container {
+    background-color: white;
+    color: #333;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto; /* ISTO CENTRA A CAIXA! */
+    display: flex;
+    justify-content: space-around;
+    padding: 50px;
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.feature-item {
+    text-align: center;
+    flex: 1;
+    min-width: 250px;
+}
+
+.feature-icon i {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+/* Cores dos Ícones */
+.fa-rocket { color: #e63946; }
+.fa-shield-halved, .fa-shield-alt { color: #457b9d; }
+.fa-gem { color: #a8dadc; }
+
+
+/* =========================================
+   4. PÁGINAS DO SITE (FROTA, LOGIN, ETC)
+   ========================================= */
+
+/* Header Normal (Preto e Fixo) - Aplica-se a tudo o que NÃO é landing page */
+header:not(.landing-header) {
+    background-color: #000;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #d4af37;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+header h1 {
+    font-size: 1.8rem;
+    margin: 0;
+    cursor: pointer;
+}
+
+#user-area {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Layout Geral */
+.container, #lista-veiculos {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+/* Layout Fino (Login/Registo) */
+.login-container, .admin-container {
+    max-width: 500px;
+    margin: 80px auto;
+    padding: 40px;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    border-top: 3px solid #d4af37;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+/* Grelha de Carros */
+#lista-veiculos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.car-card {
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #333;
+    transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+.car-card:hover { transform: translateY(-5px); border-color: #d4af37; }
+
+.car-image { width: 100%; height: 220px; object-fit: cover; }
+.car-title { font-size: 1.4rem; padding: 15px; color: white; }
+.car-info { padding: 0 15px; color: #aaa; flex-grow: 1; }
+.car-price { font-size: 1.3rem; color: #d4af37; font-weight: bold; padding: 15px; }
+.car-card .btn { width: 90%; margin: 15px auto; display: block; }
+
+/* Página de Reservas */
+.reserva-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    background-color: #1e1e1e;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+@media (max-width: 768px) { .reserva-grid { grid-template-columns: 1fr; } }
+
+/* Inputs e Forms */
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    background-color: #333;
+    border: 1px solid #555;
+    color: white;
+    border-radius: 4px;
+}
+
+/* Minhas Reservas */
+.reserva-item {
+    background-color: #252525;
+    border-left: 5px solid #d4af37;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-radius: 5px;
+}
+.reserva-foto { width: 120px; height: 80px; object-fit: cover; border-radius: 4px; }
+.reserva-info { flex-grow: 1; }
+.reserva-status {
+    background-color: #155724; color: #d4edda;
+    padding: 5px 15px; border-radius: 20px;
+    font-size: 0.8rem; font-weight: bold; text-transform: uppercase;
+}
+.status-pendente .reserva-status { background-color: #d4af37; color: black; } /* Estilo Pendente */
+
+/* =========================================
+   5. RODAPÉ (FOOTER)
+   ========================================= */
+.main-footer {
+    background-color: #0a0a0a;
+    padding: 60px 20px 20px;
+    color: #aaa;
+    border-top: 1px solid #222;
+    margin-top: auto;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-col h3 { color: #d4af37; margin-bottom: 20px; }
+.footer-col ul li { margin-bottom: 10px; }
+.footer-col ul li a:hover { color: #d4af37; }
+
+.payment-icons {
+    font-size: 2rem;
+    display: flex;
+    gap: 15px;
+    color: white;
+    margin-top: 10px;
+}
+
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid #222;
+    padding-top: 20px;
+    font-size: 0.8rem;
+    color: #555;
+}
+/* =========================================
+   6. LAYOUT DE RESERVA (DETALHES LADO A LADO)
+   ========================================= */
+
+/* Grelha Superior: Carro e Formulário */
+.checkout-top-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Duas colunas iguais */
+    gap: 30px;
+    align-items: stretch;
+}
+
+.car-details-card {
+    background: #1e1e1e;
+    border-radius: 15px;
+    border: 1px solid #333;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+}
+
+.car-details-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-bottom: 3px solid #d4af37;
+}
+
+.car-details-info {
+    padding: 25px;
+    flex-grow: 1;
+}
+
+.booking-card {
+    background: #1e1e1e;
+    padding: 30px;
+    border-radius: 15px;
+    border-top: 4px solid #d4af37;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Secção Inferior: Mapa */
+#map-reserva {
+    height: 400px; /* Mapa maior por estar em baixo */
+    width: 100%;
+    border-radius: 15px;
+    border: 2px solid #d4af37;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.total-display {
+    background: #252525;
+    margin: 20px 0;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #d4af37;
+    border: 1px dashed #444;
+}
+
+/* Ajuste Responsivo para Telemóveis */
+@media (max-width: 850px) {
+    .checkout-top-grid {
+        grid-template-columns: 1fr; /* Volta a empilhar em ecrãs pequenos */
+    }
+}

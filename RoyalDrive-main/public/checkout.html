@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento Seguro - RoyalDrive</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilos específicos para o Checkout */
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 40px;
+        }
+        @media (max-width: 768px) { .checkout-grid { grid-template-columns: 1fr; } }
+
+        .resumo-pedido {
+            background-color: #252525;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #444;
+        }
+
+        .payment-methods {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .method-btn {
+            flex: 1;
+            padding: 15px;
+            background-color: #333;
+            border: 1px solid #555;
+            color: white;
+            cursor: pointer;
+            text-align: center;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .method-btn.active {
+            background-color: #d4af37;
+            color: black;
+            border-color: #d4af37;
+        }
+
+        .form-pagamento {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 8px;
+            border-top: 3px solid #d4af37;
+        }
+
+        .input-group { margin-bottom: 15px; }
+        .row { display: flex; gap: 15px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 onclick="window.location.href='/'" style="cursor: pointer;">🔒 Pagamento Seguro</h1>
+    </header>
+
+    <div class="container">
+        <h2 style="margin-bottom: 20px;">Finalizar Pagamento</h2>
+
+        <div class="checkout-grid">
+            
+            <div class="resumo-pedido">
+                <h3>Resumo da Reserva</h3>
+                <p style="color: #aaa; margin-bottom: 15px;">Confirma os detalhes antes de pagar.</p>
+                <hr style="border-color: #444; margin-bottom: 15px;">
+                
+                <div id="resumo-conteudo">
+                    <p>Carregando dados...</p>
+                </div>
+
+                <div style="margin-top: 20px; font-size: 1.4rem; color: #d4af37; font-weight: bold;">
+                    Total a Pagar: <span id="display-total">0.00€</span>
+                </div>
+            </div>
+
+            <div class="form-pagamento">
+                <h3>Escolha o Método</h3>
+                
+                <div class="payment-methods">
+                    <div class="method-btn active" onclick="mudarMetodo('cc')">💳 Cartão Crédito</div>
+                    <div class="method-btn" onclick="mudarMetodo('mbway')">📱 MB WAY</div>
+                </div>
+
+                <div id="form-cc">
+                    <label>Número do Cartão</label>
+                    <input type="text" placeholder="0000 0000 0000 0000" maxlength="19">
+                    
+                    <div class="row">
+                        <div style="flex:1">
+                            <label>Validade</label>
+                            <input type="text" placeholder="MM/AA" maxlength="5">
+                        </div>
+                        <div style="flex:1">
+                            <label>CVV</label>
+                            <input type="text" placeholder="123" maxlength="3">
+                        </div>
+                    </div>
+                    <label>Nome no Cartão</label>
+                    <input type="text" placeholder="Como está no cartão">
+                </div>
+
+                <div id="form-mbway" style="display: none;">
+                    <label>Número de Telemóvel</label>
+                    <input type="text" placeholder="910 000 000" maxlength="9">
+                    <p style="color: #aaa; font-size: 0.9rem; margin-top: 10px;">
+                        Ao confirmar, receberás uma notificação na app MB WAY para autorizar o pagamento.
+                    </p>
+                </div>
+
+                <button id="btn-finalizar" class="btn" style="width: 100%; margin-top: 20px; padding: 15px;">
+                    PAGAR AGORA
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="checkout.js"></script>
+</body>
+</html>

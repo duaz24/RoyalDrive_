@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoyalDrive - Rent-a-Car de Luxo</title>
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <h1 onclick="window.location.href='/'" style="cursor: pointer;">👑 RoyalDrive</h1>
+        <div id="user-area">
+            <button class="btn" style="width: auto;" onclick="window.location.href='login.html'">Login</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="filters-container" style="background: #1e1e1e; padding: 25px; border-radius: 12px; margin-bottom: 40px; border: 1px solid #333; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+            <h3 style="font-size: 1.2rem; margin-bottom: 20px; color: #d4af37;"><i class="fas fa-filter"></i> Filtrar a nossa Frota</h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                <div>
+                    <label style="display: block; margin-bottom: 8px; color: #aaa;">Pesquisar Modelo</label>
+                    <input type="text" id="search-text" placeholder="Ex: Ferrari, BMW..." style="margin-bottom: 0;">
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px; color: #aaa;">Categoria</label>
+                    <select id="filter-categoria" style="margin-bottom: 0;">
+                        <option value="todos">Todas as Categorias</option>
+                        <option value="Desportivo">Desportivo</option>
+                        <option value="SUV Luxo">SUV Luxo</option>
+                        <option value="Executivo">Executivo</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px; color: #aaa;">Localização</label>
+                    <select id="filter-local" style="margin-bottom: 0;">
+                        <option value="todos">Todas as Cidades</option>
+                        <option value="Lisboa">Lisboa</option>
+                        <option value="Porto">Porto</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px; color: #aaa;">Preço Máximo (€/dia)</label>
+                    <input type="number" id="filter-preco" placeholder="Ex: 500" style="margin-bottom: 0;">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 25px;">
+                <button id="btn-filtrar" class="btn" style="flex: 2; padding: 15px;"><i class="fas fa-check"></i> Aplicar Filtros</button>
+                <button id="btn-limpar" class="btn" style="flex: 1; background: #444; color: #fff; padding: 15px;"><i class="fas fa-undo"></i> Limpar</button>
+            </div>
+        </section>
+
+        <h2>A Nossa Frota Exclusiva</h2>
+        <p>Escolha o veículo perfeito para a sua experiência.</p>
+        
+        <div id="lista-veiculos" class="car-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 20px; margin-bottom: 50px;">
+            <p>A carregar frota...</p>
+        </div>
+
+        <h2 style="margin-bottom: 15px;">Localização das Nossas Agências</h2>
+        <div id="map" style="height: 400px; width: 100%; border-radius: 10px; margin-bottom: 40px; border: 2px solid #d4af37; box-shadow: 0 5px 15px rgba(0,0,0,0.5);"></div>
+    </div>
+    
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-col">
+                <h3 class="footer-logo">👑 RoyalDrive</h3>
+                <p>A tua escolha de eleição para uma experiência de condução inesquecível.</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Navegação</h4>
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="frota.html">Frota</a></li>
+                    <li><a href="minhas-reservas.html">Minhas Reservas</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Ajuda</h4>
+                <ul>
+                    <li><a href="termos.html">Termos e Condições</a></li>
+                    <li><a href="privacidade.html">Política de Privacidade</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Pagamento Seguro</h4>
+                <div class="payment-icons">
+                    <i class="fa-brands fa-cc-visa"></i>
+                    <i class="fa-brands fa-cc-mastercard"></i>
+                    <i class="fa-brands fa-apple-pay"></i>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 RoyalDrive. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBR8DozD9t-myaTNHdU6lB6XRxLI9IZTHk&callback=initMap" async defer></script>
+</body>
+</html>

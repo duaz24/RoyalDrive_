@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel Admin - RoyalDrive</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Layout de 2 colunas para o Admin */
+        .admin-dashboard {
+            display: grid;
+            grid-template-columns: 1fr 2fr; /* Coluna da direita mais larga */
+            gap: 30px;
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        @media (max-width: 1000px) { .admin-dashboard { grid-template-columns: 1fr; } }
+
+        .painel-box {
+            background-color: #1e1e1e;
+            padding: 25px;
+            border-radius: 8px;
+            border-top: 3px solid #d4af37;
+        }
+
+        /* Estilo da Tabela de Reservas */
+        .reserva-card {
+            background-color: #2b2b2b;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid #555;
+        }
+        .status-pendente { border-left-color: #f0ad4e; } /* Laranja */
+        .status-confirmada { border-left-color: #28a745; } /* Verde */
+        
+        .btn-mini { padding: 5px 10px; font-size: 0.8rem; margin-left: 5px; }
+        .btn-aprovar { background-color: #28a745; color: white; }
+        .btn-rejeitar { background-color: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 onclick="window.location.href='/'" style="cursor:pointer">👑 Admin RoyalDrive</h1>
+        <button class="btn btn-secondary" onclick="window.location.href='index.html'">Voltar ao Site</button>
+    </header>
+
+    <div class="admin-dashboard">
+        
+        <div class="painel-box">
+            <h2>➕ Adicionar Veículo</h2>
+            <form id="addVehicleForm">
+                <input type="text" id="marca" placeholder="Marca (ex: Ferrari)" required>
+                <input type="text" id="modelo" placeholder="Modelo (ex: 488 GTB)" required>
+                <input type="number" id="ano" placeholder="Ano (ex: 2024)" required>
+                <input type="text" id="matricula" placeholder="Matrícula" required>
+                <input type="number" id="preco" placeholder="Preço/Dia (€)" required>
+                <input type="text" id="imagem" placeholder="URL da Imagem" required>
+                
+                <label style="margin-top:10px">Categoria:</label>
+                <select id="tipo" style="margin-bottom:15px">
+                    <option value="1">Desportivo</option>
+                    <option value="2">SUV Luxo</option>
+                    <option value="3">Executivo</option>
+                </select>
+
+                <label>Agência:</label>
+                <select id="agencia" style="margin-bottom:20px">
+                    <option value="1">Lisboa</option>
+                    <option value="2">Porto</option>
+                    <option value="3">Algarve</option>
+                </select>
+
+                <button type="submit" class="btn" style="width:100%">Adicionar à Frota</button>
+            </form>
+        </div>
+
+        <div class="painel-box">
+            <h2>📋 Gestão de Reservas</h2>
+            <div id="lista-reservas">
+                <p>A carregar pedidos...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

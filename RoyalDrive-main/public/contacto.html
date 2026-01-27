@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacta-nos - RoyalDrive</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1 onclick="window.location.href='index.html'" style="cursor: pointer;">👑 RoyalDrive</h1>
+        <a href="frota.html" class="btn">Voltar à Frota</a>
+    </header>
+
+    <div class="login-container" style="max-width: 600px;"> <h2>Fale Connosco</h2>
+        <p style="color: #aaa; margin-bottom: 20px;">Tens dúvidas? Estamos aqui para ajudar.</p>
+
+        <form id="contactForm">
+            <label>Nome</label>
+            <input type="text" placeholder="O teu nome" required>
+
+            <label>Email</label>
+            <input type="email" placeholder="teu@email.com" required>
+
+            <label>Mensagem</label>
+            <textarea style="width: 100%; padding: 10px; background: #333; color: white; border: 1px solid #555; border-radius: 4px; height: 100px;" placeholder="Como podemos ajudar?" required></textarea>
+
+            <button type="submit" class="btn" style="width: 100%; margin-top: 20px;">ENVIAR MENSAGEM</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('✅ Mensagem enviada! Entraremos em contacto em breve.');
+            window.location.href = 'frota.html';
+        });
+    </script>
+</body>
+</html>
