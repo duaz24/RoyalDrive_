@@ -84,13 +84,11 @@ exports.getAllReservations = async (req, res) => {
     try {
         // Usamos LEFT JOIN para garantir que a reserva aparece mesmo que falte algo
         const [reservas] = await db.query(`
-            SELECT 
-                r.*, 
-                v.marca, 
-                v.modelo, 
-                u.nome AS nome_cliente
-            FROM reservas r
-            LEFT JOIN veiculos v ON r.id_veiculo = v.id_veiculo
+            
+SELECT r.*, v.marca, v.modelo, v.imagem_url, u.nome AS nome_cliente
+FROM reservas r
+LEFT JOIN veiculos v ON r.id_veiculo = v.id_veiculo
+
             LEFT JOIN utilizadores u ON r.id_utilizador = u.id_utilizador
             ORDER BY r.data_criacao DESC
         `);
