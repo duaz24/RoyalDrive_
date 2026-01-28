@@ -41,4 +41,12 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`Servidor a correr na porta ${PORT}`);
     console.log(`Abre o site aqui: http://localhost:${PORT}`);
+    // ... outras importações
+const publicRoutes = require('./routes/publicRoutes'); // Adiciona isto
+
+// ...
+app.use('/api/auth', authRoutes);
+app.use('/api/veiculos', vehicleRoutes);
+app.use('/api/reservas', reservationRoutes);
+app.use('/api/public', publicRoutes); // Adiciona isto (O teu Web Service ficará em /api/public/...)
 });
