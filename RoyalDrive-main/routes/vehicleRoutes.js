@@ -8,6 +8,5 @@ router.get('/', vehicleController.getAllVehicles);
 router.get('/:id', vehicleController.getVehicleById);
 
 // Só Admin pode criar veículos
-router.post('/', authMiddleware, checkRole(['Administrador', 'Admin']), vehicleController.createVehicle);
-
+router.post('/', authMiddleware, roleMiddleware(['Administrador', 'Admin']), vehicleController.createVehicle);
 module.exports = router;
