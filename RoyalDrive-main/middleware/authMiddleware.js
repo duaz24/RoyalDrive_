@@ -2,7 +2,8 @@ const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
     // 1. Tentar ler o token do cabeçalho
-    const token = req.header('Authorization')?.replace('Bearer ', '');
+    const authHeader = req.header('Authorization');
+    const token = authHeader?.replace('Bearer ', '');
 
     if (!token) {
         console.log("⛔ [Middleware] Acesso negado: Token não encontrado.");
@@ -10,18 +11,23 @@ module.exports = (req, res, next) => {
     }
 
     try {
-        // 2. Verificar se a chave é válida
-        // ATENÇÃO: Tem de ser igual à usada no authController.js
-        const decoded = jwt.verify(token, 'segredo_super_secreto');
+        // 2. Definir a chave secreta (Tem de ser IGUAL em todo o lado)
+        // Tentamos ler do Render (process.env) ou usamos a tua nova chave padrão
+        const secretKey = process.env.JWT_SECRET || 'segredo_super_secreto_royal';
+
+        // 3. Verificar o token
+        const decoded = jwt.verify(token, secretKey);
         
-        // 3. Guardar os dados do utilizador no pedido
+        // 4. Guardar os dados do utilizador no pedido (incluindo a role)
         req.user = decoded;
         
         console.log(`✅ [Middleware] Token VÁLIDO para o user ID: ${req.user.id} (Role: ${req.user.role})`);
-        next(); // Deixa passar
+        next(); 
 
     } catch (error) {
         console.log("❌ [Middleware] Token INVÁLIDO:", error.message);
-        res.status(400).json({ message: 'Token inválido.' });
+        // Se o erro for assinatura, avisamos para fazer novo login
+        const msg = error.name === 'JsonWebTokenError' ? 'Sessão inválida. Faça login novamente.' : 'Token expirado.';
+        res.status(401).json({ message: msg });
     }
 };
