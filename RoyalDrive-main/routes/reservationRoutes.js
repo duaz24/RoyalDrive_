@@ -8,8 +8,8 @@ const roleMiddleware = require('../middleware/roleMiddleware');
 router.get('/my', authMiddleware, reservationController.getMyReservations);
 
 // Rota para o Admin ver todas as reservas (Usa getAllReservations)
-router.get('/all', authMiddleware, roleMiddleware(['Administrador']), reservationController.getAllReservations);
-
+// Adicionamos 'Admin' à lista de permissões
+router.get('/all', authMiddleware, roleMiddleware(['Administrador', 'Admin']), reservationController.getAllReservations);
 // Rota para criar reserva
 router.post('/', authMiddleware, reservationController.createReservation);
 
