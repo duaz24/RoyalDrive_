@@ -2,14 +2,18 @@ const express = require('express');
 const router = express.Router();
 const reservationController = require('../controllers/reservationController');
 const authMiddleware = require('../middleware/authMiddleware');
-const checkRole = require('../middleware/roleMiddleware'); // <--- NOVO
+const roleMiddleware = require('../middleware/roleMiddleware');
 
-// Rotas de Cliente
+// Rota para o Cliente ver as suas próprias reservas (Usa getMyReservations)
+router.get('/my', authMiddleware, reservationController.getMyReservations);
+
+// Rota para o Admin ver todas as reservas (Usa getAllReservations)
+router.get('/all', authMiddleware, roleMiddleware(['Administrador']), reservationController.getAllReservations);
+
+// Rota para criar reserva
 router.post('/', authMiddleware, reservationController.createReservation);
-router.get('/me', authMiddleware, reservationController.getMyReservations);
 
-// Rotas de Admin (Protegidas com checkRole)
-router.get('/all', authMiddleware, checkRole(['Administrador', 'GestorAgencia', 'Admin']), reservationController.getAllReservations);
-router.put('/:id/status', authMiddleware, checkRole(['Administrador']), reservationController.updateStatus);
+// Rota para atualizar estado (Aprovar/Recusar)
+router.put('/:id/status', authMiddleware, roleMiddleware(['Administrador']), reservationController.updateStatus);
 
 module.exports = router;
