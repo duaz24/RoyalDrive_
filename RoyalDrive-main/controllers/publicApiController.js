@@ -26,11 +26,14 @@ exports.getFrotaStats = async (req, res) => {
 };
 
 // Método 3: Listar veículos disponíveis (Apenas dados básicos)
+// No ficheiro controllers/publicApiController.js
+
 exports.getVeiculosDisponiveis = async (req, res) => {
     try {
-        const [rows] = await db.query('SELECT marca, modelo, cor, estado FROM veiculos WHERE estado = "Disponível"');
+        const [rows] = await db.query('SELECT marca, modelo, cor FROM veiculos LIMIT 10');
         res.json(rows);
     } catch (error) {
-        res.status(500).json({ erro: "Erro ao consultar veículos" });
+        console.error(error); // Isto ajuda-te a ver o erro real na consola do Render
+        res.status(500).json({ erro: "Erro ao consultar veículos", detalhe: error.message });
     }
 };
