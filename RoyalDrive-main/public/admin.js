@@ -20,7 +20,9 @@ async function carregarReservasAdmin() {
         }
 
         const reservas = await resposta.json();
-        const tabelaCorpo = document.querySelector('#tabela-reservas tbody');
+        // No public/admin.js, dentro da função carregarReservasAdmin
+const tabelaCorpo = document.querySelector('#tabela-reservas tbody');
+tabelaCorpo.innerHTML = ''; // ESTA LINHA REMOVE O "A CARREGAR..."
         
         if (!tabelaCorpo) return;
         tabelaCorpo.innerHTML = '';
