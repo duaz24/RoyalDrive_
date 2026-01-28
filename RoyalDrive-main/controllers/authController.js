@@ -48,10 +48,10 @@ exports.login = async (req, res) => {
         }
 
         // Gerar o Token
-        const token = jwt.sign(
-            { id: user.id_utilizador, role: user.role }, 
-            'segredo_super_secreto', 
-            { expiresIn: '1h' }
+       const token = jwt.sign(
+    { id: user.id_utilizador, role: user.role }, 
+    process.env.JWT_SECRET || 'segredo_super_secreto_royal', // Tenta usar o do Render, se não houver usa o padrão
+    { expiresIn: '1h' }
         );
 
         // Enviar resposta
