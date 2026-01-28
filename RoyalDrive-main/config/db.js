@@ -20,3 +20,6 @@ const promisePool = pool.promise();
 console.log(`🔌 A tentar ligar ao MySQL na porta: ${process.env.DB_PORT || 3306}`);
 
 module.exports = promisePool;
+ssl: {
+  rejectUnauthorized: false
+}
