@@ -82,26 +82,24 @@ exports.getMyReservations = async (req, res) => {
 // --- 3. TODAS AS RESERVAS (Para o Admin ver tudo) ---
 exports.getAllReservations = async (req, res) => {
     try {
-        // Garantimos que os JOINs usam as colunas corretas
+        // Usamos LEFT JOIN para garantir que a reserva aparece mesmo que falte algo
         const [reservas] = await db.query(`
             SELECT 
-                r.id_reserva, 
-                r.data_inicio, 
-                r.data_fim, 
-                r.valor_total, 
-                r.estado,
+                r.*, 
                 v.marca, 
                 v.modelo, 
                 u.nome AS nome_cliente
             FROM reservas r
-            INNER JOIN veiculos v ON r.id_veiculo = v.id_veiculo
-            INNER JOIN utilizadores u ON r.id_utilizador = u.id_utilizador
+            LEFT JOIN veiculos v ON r.id_veiculo = v.id_veiculo
+            LEFT JOIN utilizadores u ON r.id_utilizador = u.id_utilizador
             ORDER BY r.data_criacao DESC
         `);
+        
+        console.log("📦 Reservas encontradas para o Admin:", reservas.length);
         res.json(reservas);
     } catch (error) {
-        console.error("❌ Erro SQL no Admin:", error.message);
-        res.status(500).json({ message: 'Erro ao carregar reservas no servidor.' });
+        console.error("❌ ERRO SQL ADMIN:", error.message);
+        res.status(500).json({ message: 'Erro ao carregar reservas.' });
     }
 };
 
