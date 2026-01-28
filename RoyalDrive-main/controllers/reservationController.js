@@ -24,10 +24,10 @@ exports.createReservation = async (req, res) => {
         // 2. Guardar na Base de Dados
         // Definimos o estado como 'Pendente' e guardamos o ID da transação
         const query = `
-            INSERT INTO reservas 
-            (id_utilizador, id_veiculo, data_inicio, data_fim, valor_total, estado, easypay_transaction_id, metodo_pagamento)
-            VALUES (?, ?, ?, ?, ?, 'Pendente', ?, ?)
-        `;
+    INSERT INTO reservas 
+    (id_utilizador, id_veiculo, data_inicio, data_fim, valor_total, estado, easypay_transaction_id, metodo_pagamento)
+    VALUES (?, ?, ?, ?, ?, 'Pendente', ?, ?)
+`;
 
         // Se o frontend não enviar método, assumimos Cartão de Crédito
         const metodoFinal = metodo_pagamento || 'Cartão de Crédito';
