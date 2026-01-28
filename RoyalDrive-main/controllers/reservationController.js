@@ -80,20 +80,17 @@ exports.getMyReservations = async (req, res) => {
 // --- 3. TODAS AS RESERVAS (Para o Admin ver tudo) ---
 exports.getAllReservations = async (req, res) => {
     try {
-        const query = `
-            SELECT r.*, u.nome AS nome_cliente, v.marca, v.modelo, v.imagem_url
+        const [reservas] = await db.query(`
+            SELECT r.*, v.marca, v.modelo, u.nome AS nome_cliente 
             FROM reservas r
-            JOIN utilizadores u ON r.id_utilizador = u.id_utilizador
             JOIN veiculos v ON r.id_veiculo = v.id_veiculo
-            ORDER BY 
-                CASE WHEN r.estado = 'Pendente' THEN 1 ELSE 2 END, 
-                r.data_criacao DESC
-        `;
-        const [rows] = await db.query(query);
-        res.json(rows);
+            JOIN utilizadores u ON r.id_utilizador = u.id_utilizador
+            ORDER BY r.data_criacao DESC
+        `);
+        res.json(reservas);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Erro ao buscar reservas.' });
+        res.status(500).json({ message: 'Erro ao carregar reservas.' });
     }
 };
 
