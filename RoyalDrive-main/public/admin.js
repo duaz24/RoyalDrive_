@@ -1,9 +1,10 @@
 async function carregarReservasAdmin() {
     const token = localStorage.getItem('token');
-    const msgErro = document.getElementById('mensagem-erro-admin'); // Opcional: para mostrar erros no ecrã
+    const container = document.getElementById('lista-reservas');
+
+    if (!container) return;
 
     try {
-        // Chamada para a rota /all que aceita 'Administrador' e 'Admin'
         const resposta = await fetch('/api/reservas/all', {
             method: 'GET',
             headers: {
@@ -12,61 +13,55 @@ async function carregarReservasAdmin() {
             }
         });
 
-        if (!resposta.ok) {
-            if (resposta.status === 403) {
-                alert("Acesso negado. Certifique-se de que é um Administrador.");
-            }
-            throw new Error('Falha ao carregar reservas.');
-        }
+        if (!resposta.ok) throw new Error('Falha ao carregar reservas');
 
         const reservas = await resposta.json();
-        // No public/admin.js, dentro da função carregarReservasAdmin
-const tabelaCorpo = document.querySelector('#tabela-reservas tbody');
-tabelaCorpo.innerHTML = ''; // ESTA LINHA REMOVE O "A CARREGAR..."
-        
-        if (!tabelaCorpo) return;
-        tabelaCorpo.innerHTML = '';
+        console.log("📥 Reservas recebidas:", reservas);
+
+        // Limpa o "A carregar pedidos..."
+        container.innerHTML = '';
 
         if (reservas.length === 0) {
-            tabelaCorpo.innerHTML = '<tr><td colspan="6">Nenhuma reserva encontrada.</td></tr>';
+            container.innerHTML = '<p>Não existem reservas pendentes.</p>';
             return;
         }
 
         reservas.forEach(res => {
             const dataInic = new Date(res.data_inicio).toLocaleDateString();
             const dataFim = new Date(res.data_fim).toLocaleDateString();
+            
+            // Define a classe de cor baseada no estado (pendente, confirmada, etc)
+            const classeStatus = `status-${res.estado.toLowerCase()}`;
 
-            tabelaCorpo.innerHTML += `
-                <tr>
-                    <td>#${res.id_reserva}</td>
-                    <td>${res.nome_cliente || 'Utilizador #' + res.id_utilizador}</td>
-                    <td>${res.marca} ${res.modelo}</td>
-                    <td>${dataInic} - ${dataFim}</td>
-                    <td><span class="status-badge ${res.estado.toLowerCase()}">${res.estado}</span></td>
-                    <td>
-                        <div class="admin-acoes">
-                            <button onclick="alterarEstado(${res.id_reserva}, 'Confirmada')" class="btn-aceitar">Aceitar</button>
-                            <button onclick="alterarEstado(${res.id_reserva}, 'Cancelada')" class="btn-recusar">Recusar</button>
-                        </div>
-                    </td>
-                </tr>
+            container.innerHTML += `
+                <div class="reserva-card ${classeStatus}">
+                    <div>
+                        <strong>#${res.id_reserva} - ${res.nome_cliente || 'Cliente'}</strong><br>
+                        <span>🚗 ${res.marca} ${res.modelo}</span><br>
+                        <small>📅 ${dataInic} a ${dataFim}</small><br>
+                        <strong>💰 ${res.valor_total}€</strong>
+                    </div>
+                    <div>
+                        <span style="display:block; margin-bottom:5px; font-size:0.8rem; text-align:right;">${res.estado}</span>
+                        <button class="btn-mini btn-aprovar" onclick="alterarEstado(${res.id_reserva}, 'Confirmada')">Aceitar</button>
+                        <button class="btn-mini btn-rejeitar" onclick="alterarEstado(${res.id_reserva}, 'Cancelada')">Recusar</button>
+                    </div>
+                </div>
             `;
         });
 
     } catch (error) {
-        console.error('Erro no Admin:', error);
-        if (msgErro) msgErro.textContent = "Erro ao carregar a gestão de reservas.";
+        console.error('Erro:', error);
+        container.innerHTML = '<p style="color:red">Erro ao ligar ao servidor.</p>';
     }
 }
 
-// Função para atualizar o estado da reserva (Aprovar/Recusar)
 async function alterarEstado(id, novoEstado) {
     const token = localStorage.getItem('token');
-    
-    if (!confirm(`Deseja alterar o estado da reserva #${id} para ${novoEstado}?`)) return;
+    if (!confirm(`Confirmar alteração para ${novoEstado}?`)) return;
 
     try {
-        const resposta = await fetch(`/api/reservas/${id}/status`, {
+        const res = await fetch(`/api/reservas/${id}/status`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -75,14 +70,14 @@ async function alterarEstado(id, novoEstado) {
             body: JSON.stringify({ estado: novoEstado })
         });
 
-        if (resposta.ok) {
-            alert(`Reserva ${novoEstado} com sucesso!`);
-            carregarReservasAdmin(); // Recarrega a lista
+        if (res.ok) {
+            alert("Estado atualizado com sucesso!");
+            carregarReservasAdmin();
         } else {
-            alert("Erro ao atualizar o estado da reserva.");
+            alert("Erro ao atualizar estado.");
         }
-    } catch (error) {
-        console.error('Erro ao atualizar:', error);
+    } catch (e) {
+        console.error(e);
     }
 }
 
