@@ -63,8 +63,9 @@ exports.createReservation = async (req, res) => {
 exports.getMyReservations = async (req, res) => {
     const id_utilizador = req.user.id;
     try {
+        // Removida a imagem_url temporariamente para testar se o erro é da coluna inexistente
         const query = `
-            SELECT r.*, v.marca, v.modelo, v.imagem_url
+            SELECT r.*, v.marca, v.modelo
             FROM reservas r
             JOIN veiculos v ON r.id_veiculo = v.id_veiculo
             WHERE r.id_utilizador = ?
@@ -73,6 +74,7 @@ exports.getMyReservations = async (req, res) => {
         const [rows] = await db.query(query, [id_utilizador]);
         res.json(rows);
     } catch (error) {
+        console.error("❌ Erro SQL em getMyReservations:", error);
         res.status(500).json({ message: 'Erro ao buscar histórico.' });
     }
 };
