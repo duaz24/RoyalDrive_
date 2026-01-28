@@ -51,11 +51,14 @@ exports.login = async (req, res) => {
         // Usamos a chave do Render: "segredo_super_secreto_royal"
         const secret = process.env.JWT_SECRET || 'segredo_super_secreto_royal';
         
-        const token = jwt.sign(
-            { id: user.id_utilizador, role: user.role }, 
-            secret, 
-            { expiresIn: '1h' }
-        );
+       const token = jwt.sign(
+    { 
+        id: user.id_utilizador, 
+        role: user.role // <--- ESTA LINHA É OBRIGATÓRIA
+    }, 
+    process.env.JWT_SECRET || 'segredo_super_secreto_royal', 
+    { expiresIn: '1h' }
+);
 
         // 4. Resposta
         res.json({
