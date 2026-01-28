@@ -7,19 +7,19 @@ const pool = mysql.createPool({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    port: process.env.DB_PORT || 3306, // AQUI ESTÁ O SEGREDO: Lê a porta 3307 do .env
+    port: process.env.DB_PORT || 21836, // Usa a porta do Aiven
+    ssl: {
+        rejectUnauthorized: false // OBRIGATÓRIO para o Aiven funcionar no Render
+    },
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
 });
 
-// Converter para Promises para usar 'await' no resto do projeto
+// Converter para Promises para usar 'await'
 const promisePool = pool.promise();
 
-// Mensagem no terminal para confirmar que apanhou a porta certa
-console.log(`🔌 A tentar ligar ao MySQL na porta: ${process.env.DB_PORT || 3306}`);
+// Log para controlo
+console.log(`🔌 Tentativa de ligação ao MySQL: ${process.env.DB_HOST}:${process.env.DB_PORT}`);
 
 module.exports = promisePool;
-ssl: {
-  rejectUnauthorized: false
-}
