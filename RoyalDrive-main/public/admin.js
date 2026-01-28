@@ -56,3 +56,43 @@ async function alterarEstado(id, estado) {
 }
 
 document.addEventListener('DOMContentLoaded', carregarReservasAdmin);
+// Adicionar isto ao fim do teu public/admin.js
+document.getElementById('addVehicleForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const token = localStorage.getItem('token');
+    const dados = {
+        marca: document.getElementById('marca').value,
+        modelo: document.getElementById('modelo').value,
+        ano_fabrico: document.getElementById('ano').value,
+        matricula: document.getElementById('matricula').value,
+        preco_diario: document.getElementById('preco').value,
+        imagem_url: document.getElementById('imagem').value,
+        id_tipo_veiculo: document.getElementById('tipo').value,
+        id_agencia_atual: document.getElementById('agencia').value,
+        cor: "Preto" // Adicionado para evitar erro, já que o controller espera 'cor'
+    };
+
+    try {
+        const resposta = await fetch('/api/veiculos', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(dados)
+        });
+
+        const resultado = await resposta.json();
+
+        if (resposta.ok) {
+            alert("Sucesso: " + resultado.message);
+            location.reload(); // Recarrega para limpar o formulário
+        } else {
+            alert("Erro: " + resultado.message);
+        }
+    } catch (error) {
+        console.error("Erro ao enviar:", error);
+        alert("Erro na ligação ao servidor.");
+    }
+});
