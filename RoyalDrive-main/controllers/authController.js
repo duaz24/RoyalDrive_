@@ -2,7 +2,6 @@ const db = require('../config/db');
 const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client("87622514862-o3hlv3errl0umue53b8mffevgmpttvin.apps.googleusercontent.com");
-
 // --- APENAS LOGIN GOOGLE ---
 exports.googleLogin = async (req, res) => {
     const { token } = req.body;
