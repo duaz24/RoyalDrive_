@@ -2,68 +2,48 @@ const db = require('../config/db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// --- REGISTO ---
-exports.register = async (req, res) => {
-    const { nome, email, password } = req.body;
+// 1. ADICIONA ISTO NO TOPO (Linha 4)
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client("87622514862-o3hlv3errl0umue53b8mffevgmpttvin.apps.googleusercontent.com"); 
+
+// ... (mantém o código de registo e login normal igual) ...
+
+// 2. ADICIONA ESTA NOVA FUNÇÃO NO FINAL (Antes do exports.getMe ou no fim do ficheiro)
+exports.googleLogin = async (req, res) => {
+    const { token } = req.body;
 
     try {
-        const [existing] = await db.query('SELECT * FROM utilizadores WHERE email = ?', [email]);
-        if (existing.length > 0) {
-            return res.status(400).json({ message: 'Este email já está registado.' });
+        // Verificar o token com a Google
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: "87622514862-o3hlv3errl0umue53b8mffevgmpttvin.apps.googleusercontent.com", // O mesmo ID de cima
+        });
+        const payload = ticket.getPayload();
+        const { email, name, sub } = payload; 
+
+        // Verificar se o utilizador já existe
+        const [users] = await db.query('SELECT * FROM utilizadores WHERE email = ?', [email]);
+        let user = users[0];
+
+        if (!user) {
+            // Se não existe, cria conta (password NULL)
+            const [result] = await db.query(
+                'INSERT INTO utilizadores (nome, email, password_hash, role) VALUES (?, ?, ?, ?)', 
+                [name, email, null, 'Cliente']
+            );
+            user = { id_utilizador: result.insertId, nome: name, email: email, role: 'Cliente' };
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        // Gerar o nosso Token JWT
+        const tokenJwt = jwt.sign(
+            { id: user.id_utilizador, role: user.role }, 
+            process.env.JWT_SECRET || 'segredo_super_secreto_royal', 
+            { expiresIn: '1h' }
+        );
 
-        await db.query('INSERT INTO utilizadores (nome, email, password_hash, role) VALUES (?, ?, ?, ?)', 
-            [nome, email, hashedPassword, 'Cliente']);
-
-        res.status(201).json({ message: 'Registo efetuado com sucesso!' });
-
-    } catch (error) {
-        console.error("Erro no registo:", error);
-        res.status(500).json({ message: 'Erro no servidor.' });
-    }
-};
-
-// --- LOGIN (VERSÃO ROBUSTA) ---
-exports.login = async (req, res) => {
-    const { email, password } = req.body;
-
-    try {
-        // 1. Busca o utilizador (usamos TRIM para limpar espaços invisíveis no email)
-        const [users] = await db.query('SELECT * FROM utilizadores WHERE TRIM(email) = TRIM(?)', [email]);
-
-        if (users.length === 0) {
-            return res.status(400).json({ message: 'Email não encontrado.' });
-        }
-
-        const user = users[0];
-
-        // 2. Comparação da Password
-        // O user.password_hash deve vir exatamente da tua BD
-        const isMatch = await bcrypt.compare(password, user.password_hash);
-
-        if (!isMatch) {
-            return res.status(400).json({ message: 'Password errada.' });
-        }
-
-        // 3. Geração do Token
-        // Usamos a chave do Render: "segredo_super_secreto_royal"
-        const secret = process.env.JWT_SECRET || 'segredo_super_secreto_royal';
-        
-       const token = jwt.sign(
-    { 
-        id: user.id_utilizador, 
-        role: user.role // <--- ESTA LINHA É OBRIGATÓRIA
-    }, 
-    process.env.JWT_SECRET || 'segredo_super_secreto_royal', 
-    { expiresIn: '1h' }
-);
-
-        // 4. Resposta
         res.json({
-            message: 'Login com sucesso!',
-            token: token,
+            message: 'Login Google com sucesso!',
+            token: tokenJwt,
             user: {
                 id: user.id_utilizador,
                 nome: user.nome,
@@ -73,11 +53,12 @@ exports.login = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Erro Crítico no Login:", error);
-        res.status(500).json({ message: 'Erro interno no servidor.' });
+        console.error("Erro Google:", error);
+        res.status(401).json({ message: 'Token Google inválido.' });
     }
 };
 
+// ... (mantém o exports.getMe igual)
 exports.getMe = async (req, res) => {
     res.json(req.user);
 };
