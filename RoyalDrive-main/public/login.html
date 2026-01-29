@@ -6,6 +6,8 @@
     <title>Login - RoyalDrive</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="stylesheet" href="style.css">
+    
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -26,7 +28,12 @@
             <button type="submit" class="btn" style="width: 100%; margin-top: 20px;">ENTRAR</button>
         </form>
 
-        <p style="margin-top: 15px; text-align: center; color: #aaa;">
+        <div style="margin-top: 25px; text-align: center; border-top: 1px solid #444; padding-top: 20px;">
+            <p style="color: #aaa; margin-bottom: 15px; font-size: 0.9em;">Ou entre rapidamente com:</p>
+            <div id="google-btn" style="display: flex; justify-content: center;"></div>
+        </div>
+
+        <p style="margin-top: 20px; text-align: center; color: #aaa;">
             Ainda não tem conta? <a href="registar.html" style="color: #d4af37; font-weight: bold;">Crie aqui.</a>
         </p>
 
