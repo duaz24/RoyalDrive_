@@ -6,7 +6,6 @@
     <title>Login - RoyalDrive</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="stylesheet" href="style.css">
-    
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
@@ -15,30 +14,13 @@
         <h1 onclick="window.location.href='/'" style="cursor: pointer;">👑 RoyalDrive</h1>
     </header>
 
-    <div class="login-container">
-        <h2>Bem-vindo de volta</h2>
+    <div class="login-container" style="text-align: center; max-width: 400px; margin: 60px auto; padding: 40px;">
+        <h2>Bem-vindo</h2>
+        <p style="color: #aaa; margin-bottom: 30px;">Entre com a sua conta Google para continuar.</p>
         
-        <form id="loginForm">
-            <label for="email">Email</label>
-            <input type="email" id="email" placeholder="seu@email.com" required>
+        <div id="googleBtn" style="display: flex; justify-content: center; margin-bottom: 20px;"></div>
 
-            <label for="password">Password</label>
-            <input type="password" id="password" placeholder="********" required>
-
-            <button type="submit" class="btn" style="width: 100%; margin-top: 20px;">ENTRAR</button>
-        </form>
-
-        <div style="margin-top: 25px; text-align: center; border-top: 1px solid #444; padding-top: 20px;">
-            <p style="color: #aaa; margin-bottom: 15px; font-size: 0.9em;">Ou entre rapidamente com:</p>
-            
-            <div id="googleBtn" style="display: flex; justify-content: center;"></div>
-        </div>
-
-        <p style="margin-top: 20px; text-align: center; color: #aaa;">
-            Ainda não tem conta? <a href="registar.html" style="color: #d4af37; font-weight: bold;">Crie aqui.</a>
-        </p>
-
-        <p id="mensagem-erro" style="color: #ff6b6b; text-align: center; display: none; margin-top: 10px;"></p>
+        <p id="mensagem-erro" style="color: #ff6b6b; display: none; margin-top: 20px; font-size: 0.9em;"></p>
     </div>
 
     <script src="login.js"></script>
