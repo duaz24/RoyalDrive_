@@ -1,4 +1,4 @@
-const API_URL = 'https://royaldrive-royaldrive.onrender.com/api/auth'; // Confirma se o link do Render está certo
+const API_URL = 'https://royaldrive.onrender.com/api/auth'; // Confirma se o link do Render está certo
 
 // Função para mostrar erros na tua div bonita em vez de usar alert()
 function mostrarErro(mensagem) {
