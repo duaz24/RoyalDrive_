@@ -3,66 +3,67 @@
 let todosVeiculos = []; // Guarda a lista completa da API para filtrar localmente
 
 document.addEventListener('DOMContentLoaded', () => {
-    verificarLogin();      // 1. Verifica o menu
+    verificarLogin();      // 1. Verifica o menu e permissões
     inicializarFrota();    // 2. Carrega os carros
 });
 
 // --- 1. GESTÃO DE LOGIN E MENU (ATUALIZADO) ---
 function verificarLogin() {
-    // Agora lemos o objeto 'user' que guardámos no login.js
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user'));
 
-    // Selecionar os elementos do menu pelos IDs novos
+    // Selecionar os elementos do menu
     const navLogin = document.getElementById('nav-login');
     const navRegistar = document.getElementById('nav-registar');
     const navReservas = document.getElementById('nav-reservas');
     const navLogout = document.getElementById('nav-logout');
+    const navAdmin = document.getElementById('nav-admin');
+    const navUserInfo = document.getElementById('nav-user-info');
+    const userDisplayName = document.getElementById('user-display-name');
 
     if (token && user) {
         // --- UTILIZADOR ESTÁ LOGADO ---
-        // Esconde botões de entrar
         if (navLogin) navLogin.style.display = 'none';
         if (navRegistar) navRegistar.style.display = 'none';
         
-        // Mostra botões de cliente
         if (navReservas) navReservas.style.display = 'inline-block';
         if (navLogout) navLogout.style.display = 'inline-block';
 
-        // Opcional: Se quiseres mostrar o nome nalgum lado (cria um <span id="user-name"> no HTML)
-        // const userNameSpan = document.getElementById('user-name');
-        // if (userNameSpan) userNameSpan.innerText = `Olá, ${user.nome}`;
+        // Mostrar Saudação e Nome
+        if (navUserInfo && userDisplayName) {
+            navUserInfo.style.display = 'inline-block';
+            userDisplayName.textContent = user.nome || "Utilizador";
+        }
+
+        // Mostrar Painel Admin se for Administrador
+        if (navAdmin && (user.role === 'Administrador' || user.role === 'Admin')) {
+            navAdmin.style.display = 'inline-block';
+        }
 
     } else {
         // --- VISITANTE (NÃO LOGADO) ---
-        // Mostra botões de entrar
         if (navLogin) navLogin.style.display = 'inline-block';
         if (navRegistar) navRegistar.style.display = 'inline-block';
         
-        // Esconde botões de cliente
         if (navReservas) navReservas.style.display = 'none';
         if (navLogout) navLogout.style.display = 'none';
+        if (navUserInfo) navUserInfo.style.display = 'none';
+        if (navAdmin) navAdmin.style.display = 'none';
     }
 }
 
 function logout() {
-    // Limpa os dados guardados
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    
-    // Recarrega a página ou vai para a home
     window.location.href = 'index.html';
 }
 
-// --- 2. CARREGAR E FILTRAR A FROTA (MANTIDO IGUAL) ---
-
+// --- 2. CARREGAR E FILTRAR A FROTA ---
 async function inicializarFrota() {
-    // Só tenta carregar veículos se a lista existir na página (para não dar erro na Home)
     if (!document.getElementById('lista-veiculos')) return;
 
     await carregarVeiculos();
     
-    // Configurar os eventos dos filtros
     const btnFiltrar = document.getElementById('btn-filtrar');
     const btnLimpar = document.getElementById('btn-limpar');
 
@@ -92,7 +93,7 @@ async function carregarVeiculos() {
 
 function renderizarCarros(lista) {
     const container = document.getElementById('lista-veiculos');
-    if (!container) return; // Proteção extra
+    if (!container) return;
 
     container.innerHTML = ''; 
 
@@ -135,9 +136,8 @@ function aplicarFiltros() {
     renderizarCarros(filtrados);
 }
 
-// --- 3. LÓGICA DO MAPA (MANTIDO IGUAL) ---
+// --- 3. LÓGICA DO MAPA ---
 window.initMap = async function() {
-    // Se não houver mapa na página, não faz nada
     if (!document.getElementById("map")) return;
 
     const centroPortugal = { lat: 39.5, lng: -8.0 };
@@ -179,7 +179,6 @@ window.initMap = async function() {
     }
 }
 
-// --- 4. RESERVAS (MANTIDO IGUAL) ---
 function tentarReservar(idVeiculo) {
     const token = localStorage.getItem('token');
     if (!token) {
