@@ -1,17 +1,18 @@
 // controllers/chatbotController.js
 const db = require('../config/db');
+
 exports.processMessage = async (req, res) => {
     const userMessage = req.body.message.toLowerCase();
     let botResponse = "";
 
     try {
-        // Lógica simples de palavras-chave
+        // Lógica de palavras-chave (incluindo versões com e sem acento)
         if (userMessage.includes('ola') || userMessage.includes('olá') || userMessage.includes('bom dia')) {
             botResponse = "Olá! Bem-vindo à RoyalDrive. Posso ajudar-te a ver a nossa frota, agências ou contactos.";
         
-        } else if (userMessage.includes('carros') || userMessage.includes('frota') || userMessage.includes('veículos')) {
-            // Busca carros disponíveis na BD
-            const [rows] = await db.query("SELECT marca, modelo, preco_base_diario FROM veiculos WHERE estado = 'Disponível' LIMIT 3");
+        } else if (userMessage.includes('carro') || userMessage.includes('frota') || userMessage.includes('veículo') || userMessage.includes('veiculo')) {
+            // CORREÇÃO: Usar a coluna 'disponibilidade' em vez de 'estado'
+            const [rows] = await db.query("SELECT marca, modelo, preco_base_diario FROM veiculos WHERE disponibilidade = 1 LIMIT 3");
             
             if (rows.length > 0) {
                 const lista = rows.map(c => `🚗 ${c.marca} ${c.modelo} (${c.preco_base_diario}€/dia)`).join('<br>');
@@ -20,7 +21,7 @@ exports.processMessage = async (req, res) => {
                 botResponse = "De momento estamos com a frota toda reservada! Tenta mais tarde.";
             }
 
-        } else if (userMessage.includes('agencia') || userMessage.includes('local') || userMessage.includes('morada')) {
+        } else if (userMessage.includes('agencia') || userMessage.includes('agência') || userMessage.includes('local') || userMessage.includes('morada')) {
             // Busca agências na BD
             const [rows] = await db.query("SELECT nome, morada FROM agencias");
             const lista = rows.map(a => `📍 <strong>${a.nome}:</strong> ${a.morada}`).join('<br>');
@@ -37,6 +38,6 @@ exports.processMessage = async (req, res) => {
 
     } catch (error) {
         console.error("Erro no Chatbot:", error);
-        res.status(500).json({ response: "Tive um erro interno. Tenta novamente." });
+        res.status(500).json({ response: "Tive um erro interno ao consultar a base de dados. Tenta novamente." });
     }
 };
