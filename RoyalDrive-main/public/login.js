@@ -1,17 +1,20 @@
-const API_URL = 'https://royaldrive.onrender.com/api/auth'; // Confirma se o link do Render está certo
+const API_URL = 'https://royaldrive.onrender.com/api/auth'; // Mantém o teu link do Render
 
-// Função para mostrar erros na tua div bonita em vez de usar alert()
+// Função auxiliar para mostrar erros
 function mostrarErro(mensagem) {
     const erroDiv = document.getElementById('mensagem-erro');
-    erroDiv.innerText = mensagem;
-    erroDiv.style.display = 'block';
-    
-    // Esconder após 5 segundos
-    setTimeout(() => {
-        erroDiv.style.display = 'none';
-    }, 5000);
+    if (erroDiv) {
+        erroDiv.innerText = mensagem;
+        erroDiv.style.display = 'block';
+        
+        // Esconder após 5 segundos
+        setTimeout(() => {
+            erroDiv.style.display = 'none';
+        }, 5000);
+    }
 }
 
+// Callback executado quando o Google devolve o token
 async function handleCredentialResponse(response) {
     try {
         const res = await fetch(`${API_URL}/google`, {
@@ -23,67 +26,33 @@ async function handleCredentialResponse(response) {
         const data = await res.json();
 
         if (res.ok) {
+            // Guardar sessão
             localStorage.setItem('token', data.token);
             localStorage.setItem('user', JSON.stringify(data.user));
             
-            // Redirecionar consoante o cargo
+            // Redirecionar consoante o cargo (Admin ou Cliente)
             if (['Administrador', 'GestorAgencia'].includes(data.user.role)) {
                 window.location.href = 'admin.html';
             } else {
                 window.location.href = 'index.html';
             }
         } else {
-            mostrarErro(data.message || 'Erro no login Google.');
+            mostrarErro(data.message || 'Erro ao iniciar sessão com Google.');
         }
     } catch (error) {
-        mostrarErro('Erro de ligação ao servidor.');
+        console.error("Erro login:", error);
+        mostrarErro('Não foi possível contactar o servidor.');
     }
 }
 
 window.onload = function () {
-    // 1. Lógica do Formulário de Email/Pass
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            try {
-                const res = await fetch(`${API_URL}/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-
-                const data = await res.json();
-
-                if (res.ok) {
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('user', JSON.stringify(data.user));
-                    
-                    if (['Administrador', 'GestorAgencia'].includes(data.user.role)) {
-                        window.location.href = 'admin.html';
-                    } else {
-                        window.location.href = 'index.html';
-                    }
-                } else {
-                    mostrarErro(data.message || 'Email ou password errados.');
-                }
-            } catch (error) {
-                mostrarErro("Erro de conexão.");
-            }
-        });
-    }
-
-    // 2. Lógica do Botão Google
+    // Inicializar o botão Google
     if (window.google) {
         google.accounts.id.initialize({
             client_id: "87622514862-o3hlv3errl0umue53b8mffevgmpttvin.apps.googleusercontent.com",
             callback: handleCredentialResponse
         });
         
-        // Agora procura pelo ID correto "googleBtn"
         const btnContainer = document.getElementById("googleBtn");
         if (btnContainer) {
             google.accounts.id.renderButton(
