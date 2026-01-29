@@ -34,7 +34,7 @@ async function handleCredentialResponse(response) {
             if (['Administrador', 'GestorAgencia'].includes(data.user.role)) {
                 window.location.href = 'admin.html';
             } else {
-                window.location.href = 'index.html';
+                window.location.href = 'frota.html';
             }
         } else {
             mostrarErro(data.message || 'Erro ao iniciar sessão com Google.');
