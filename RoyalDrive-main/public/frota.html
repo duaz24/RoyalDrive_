@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frota - RoyalDrive</title>
+    <title>RoyalDrive - Frota de Luxo</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     
     <link rel="stylesheet" href="style.css">
@@ -12,27 +12,24 @@
 <body>
 
     <header>
-        <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
-            <h1>👑 RoyalDrive</h1>
-        </div>
-        
+        <h1 onclick="window.location.href='/'" style="cursor: pointer;">👑 RoyalDrive</h1>
         <nav>
-            <ul>
+            <ul style="display: flex; list-style: none; gap: 20px; align-items: center; margin: 0; padding: 0;">
                 <li><a href="index.html">Início</a></li>
                 <li><a href="frota.html" class="active">Frota</a></li>
                 <li><a href="contacto.html">Contactos</a></li>
 
-                <li id="nav-login"><a href="login.html">Login</a></li>
+                <li id="nav-login"><a href="login.html" class="btn" style="width: auto;">Login</a></li>
                 <li id="nav-registar"><a href="registar.html">Registar</a></li>
 
-                <li id="nav-reservas" style="display: none;"><a href="minhas-reservas.html">Minhas Reservas</a></li>
-                <li id="nav-logout" style="display: none;"><a href="#" onclick="logout()">Sair</a></li>
+                <li id="nav-reservas" style="display: none;"><a href="minhas-reservas.html" class="btn" style="width: auto;">Reservas</a></li>
+                <li id="nav-logout" style="display: none;"><button class="btn" style="background-color: #444; color: white; width: auto;" onclick="logout()">Sair</button></li>
             </ul>
         </nav>
     </header>
 
     <div class="container">
-        <section class="filters-container" style="background: #1e1e1e; padding: 25px; border-radius: 12px; margin: 40px 0; border: 1px solid #333; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+        <section class="filters-container" style="background: #1e1e1e; padding: 25px; border-radius: 12px; margin-bottom: 40px; border: 1px solid #333; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
             <h3 style="font-size: 1.2rem; margin-bottom: 20px; color: #d4af37;"><i class="fas fa-filter"></i> Filtrar a nossa Frota</h3>
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
@@ -46,8 +43,8 @@
                     <select id="filter-categoria" style="margin-bottom: 0;">
                         <option value="todos">Todas as Categorias</option>
                         <option value="Desportivo">Desportivo</option>
-                        <option value="SUV">SUV</option> <option value="Luxo">Luxo</option>
-                        <option value="Cabrio">Descapotáveis</option>
+                        <option value="SUV Luxo">SUV Luxo</option>
+                        <option value="Executivo">Executivo</option>
                     </select>
                 </div>
 
@@ -72,14 +69,14 @@
             </div>
         </section>
 
-        <h2 style="text-align: center; margin-bottom: 20px;">A Nossa Frota Exclusiva</h2>
-        <p style="text-align: center; margin-bottom: 40px;">Escolha o veículo perfeito para a sua experiência.</p>
+        <h2>A Nossa Frota Exclusiva</h2>
+        <p>Escolha o veículo perfeito para a sua experiência.</p>
         
-        <div id="lista-veiculos" class="vehicles-grid" style="min-height: 200px;">
-            <p style="text-align: center;">A carregar frota...</p>
+        <div id="lista-veiculos" class="car-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 20px; margin-bottom: 50px;">
+            <p>A carregar frota...</p>
         </div>
 
-        <h2 style="margin-bottom: 15px; margin-top: 50px;">Localização das Nossas Agências</h2>
+        <h2 style="margin-bottom: 15px;">Localização das Nossas Agências</h2>
         <div id="map" style="height: 400px; width: 100%; border-radius: 10px; margin-bottom: 40px; border: 2px solid #d4af37; box-shadow: 0 5px 15px rgba(0,0,0,0.5);"></div>
     </div>
     
@@ -89,7 +86,6 @@
                 <h3 class="footer-logo">👑 RoyalDrive</h3>
                 <p>A tua escolha de eleição para uma experiência de condução inesquecível.</p>
             </div>
-
             <div class="footer-col">
                 <h4>Navegação</h4>
                 <ul>
@@ -98,7 +94,6 @@
                     <li><a href="minhas-reservas.html">Minhas Reservas</a></li>
                 </ul>
             </div>
-
             <div class="footer-col">
                 <h4>Ajuda</h4>
                 <ul>
@@ -106,7 +101,6 @@
                     <li><a href="privacidade.html">Política de Privacidade</a></li>
                 </ul>
             </div>
-
             <div class="footer-col">
                 <h4>Pagamento Seguro</h4>
                 <div class="payment-icons">
@@ -123,7 +117,6 @@
 
     <script src="app.js"></script>
     <script src="chatbot.js"></script>
-    
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBR8DozD9t-myaTNHdU6lB6XRxLI9IZTHk&callback=initMap" async defer></script>
 </body>
 </html>
