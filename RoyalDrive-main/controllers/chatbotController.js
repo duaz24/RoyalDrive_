@@ -6,24 +6,30 @@ exports.processMessage = async (req, res) => {
     let botResponse = "";
 
     try {
-        // Lógica de palavras-chave (incluindo versões com e sem acento)
         if (userMessage.includes('ola') || userMessage.includes('olá') || userMessage.includes('bom dia')) {
             botResponse = "Olá! Bem-vindo à RoyalDrive. Posso ajudar-te a ver a nossa frota, agências ou contactos.";
         
         } else if (userMessage.includes('carro') || userMessage.includes('frota') || userMessage.includes('veículo') || userMessage.includes('veiculo')) {
-            // CORREÇÃO: Usar 'preco_diario' (conforme erro ER_BAD_FIELD_ERROR) e 'disponibilidade'
-            const [rows] = await db.query("SELECT marca, modelo, preco_diario FROM veiculos WHERE disponibilidade = 1 LIMIT 3");
+            // SQL CORRIGIDO: Liga a tabela veiculos à tipos_veiculo para buscar o preco_base_diario
+            // E usa estado = 'Disponível' conforme o teu SQL
+            const query = `
+                SELECT v.marca, v.modelo, t.preco_base_diario 
+                FROM veiculos v
+                JOIN tipos_veiculo t ON v.id_tipo_veiculo = t.id_tipo_veiculo
+                WHERE v.estado = 'Disponível' 
+                LIMIT 3
+            `;
+            
+            const [rows] = await db.query(query);
             
             if (rows.length > 0) {
-                // Mapeamento usa c.preco_diario
-                const lista = rows.map(c => `🚗 ${c.marca} ${c.modelo} (${c.preco_diario}€/dia)`).join('<br>');
+                const lista = rows.map(c => `🚗 ${c.marca} ${c.modelo} (${c.preco_base_diario}€/dia)`).join('<br>');
                 botResponse = `Temos estas máquinas disponíveis:<br>${lista}<br><a href='/frota.html'>Ver toda a frota</a>`;
             } else {
                 botResponse = "De momento estamos com a frota toda reservada! Tenta mais tarde.";
             }
 
         } else if (userMessage.includes('agencia') || userMessage.includes('agência') || userMessage.includes('local') || userMessage.includes('morada')) {
-            // Busca agências na BD
             const [rows] = await db.query("SELECT nome, morada FROM agencias");
             const lista = rows.map(a => `📍 <strong>${a.nome}:</strong> ${a.morada}`).join('<br>');
             botResponse = `Podes encontrar-nos aqui:<br>${lista}`;
@@ -38,8 +44,7 @@ exports.processMessage = async (req, res) => {
         res.json({ response: botResponse });
 
     } catch (error) {
-        // Log detalhado para o Render
         console.error("Erro no Chatbot:", error);
-        res.status(500).json({ response: "Tive um erro interno ao consultar a base de dados. Tenta novamente." });
+        res.status(500).json({ response: "Tive um erro ao consultar a base de dados. Tenta novamente." });
     }
 };
