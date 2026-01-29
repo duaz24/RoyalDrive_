@@ -1,5 +1,4 @@
 // public/chatbot.js
-
 document.addEventListener("DOMContentLoaded", () => {
     // 1. Injetar o HTML do Chat
     const chatHTML = `
