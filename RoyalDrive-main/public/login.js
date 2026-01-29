@@ -1,49 +1,95 @@
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-    e.preventDefault(); // Impede a página de recarregar sozinha
+const API_URL = 'https://royaldrive-royaldrive.onrender.com/api/auth'; // Confirma se o link do Render está certo
 
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const msgErro = document.getElementById('mensagem-erro');
-
-    // Limpar mensagens de erro antigas
-    msgErro.style.display = 'none';
-    msgErro.textContent = '';
-
-    try {
-        const resposta = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email, password })
-        });
-
-        const dados = await resposta.json();
-
-        if (resposta.ok) {
-            // 1. Guardar os dados na "Mochila" do Browser
-            localStorage.setItem('token', dados.token);
-            localStorage.setItem('usuario_nome', dados.user.nome);
-            localStorage.setItem('usuario_role', dados.user.role);
-            localStorage.setItem('usuario_id', dados.user.id);
-
-            // 2. Redirecionar para a página correta
-            // Se for Admin, vai para o painel de Admin
-         if (dados.user.role === 'Administrador') {
-    window.location.href = 'admin.html';
-} else {
-    window.location.href = 'frota.html';
+// Função para mostrar erros na tua div bonita em vez de usar alert()
+function mostrarErro(mensagem) {
+    const erroDiv = document.getElementById('mensagem-erro');
+    erroDiv.innerText = mensagem;
+    erroDiv.style.display = 'block';
+    
+    // Esconder após 5 segundos
+    setTimeout(() => {
+        erroDiv.style.display = 'none';
+    }, 5000);
 }
 
-        } else {
-            // Mostrar erro (ex: senha errada)
-            msgErro.textContent = dados.message || 'Erro ao fazer login.';
-            msgErro.style.display = 'block';
-        }
+async function handleCredentialResponse(response) {
+    try {
+        const res = await fetch(`${API_URL}/google`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: response.credential })
+        });
 
+        const data = await res.json();
+
+        if (res.ok) {
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
+            
+            // Redirecionar consoante o cargo
+            if (['Administrador', 'GestorAgencia'].includes(data.user.role)) {
+                window.location.href = 'admin.html';
+            } else {
+                window.location.href = 'index.html';
+            }
+        } else {
+            mostrarErro(data.message || 'Erro no login Google.');
+        }
     } catch (error) {
-        console.error('Erro:', error);
-        msgErro.textContent = 'Erro ao ligar ao servidor.';
-        msgErro.style.display = 'block';
+        mostrarErro('Erro de ligação ao servidor.');
     }
-});
+}
+
+window.onload = function () {
+    // 1. Lógica do Formulário de Email/Pass
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const res = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    if (['Administrador', 'GestorAgencia'].includes(data.user.role)) {
+                        window.location.href = 'admin.html';
+                    } else {
+                        window.location.href = 'index.html';
+                    }
+                } else {
+                    mostrarErro(data.message || 'Email ou password errados.');
+                }
+            } catch (error) {
+                mostrarErro("Erro de conexão.");
+            }
+        });
+    }
+
+    // 2. Lógica do Botão Google
+    if (window.google) {
+        google.accounts.id.initialize({
+            client_id: "87622514862-o3hlv3errl0umue53b8mffevgmpttvin.apps.googleusercontent.com",
+            callback: handleCredentialResponse
+        });
+        
+        // Agora procura pelo ID correto "googleBtn"
+        const btnContainer = document.getElementById("googleBtn");
+        if (btnContainer) {
+            google.accounts.id.renderButton(
+                btnContainer,
+                { theme: "outline", size: "large", width: "250", text: "continue_with" } 
+            );
+        }
+    }
+};
