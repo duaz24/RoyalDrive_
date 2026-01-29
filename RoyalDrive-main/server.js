@@ -3,7 +3,6 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./config/db');
 const path = require('path');
-
 // Importar as Rotas
 const authRoutes = require('./routes/authRoutes');
 const vehicleRoutes = require('./routes/vehicleRoutes');
