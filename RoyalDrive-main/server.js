@@ -8,7 +8,7 @@ const path = require('path');
 const authRoutes = require('./routes/authRoutes');
 const vehicleRoutes = require('./routes/vehicleRoutes');
 const reservationRoutes = require('./routes/reservationRoutes');
-
+const chatbotRoutes = require('./routes/chatbotRoutes');
 const app = express();
 
 // --- O ESPIÃO (LOG DE PEDIDOS) ---
@@ -28,7 +28,7 @@ app.use(express.static('public'));
 app.use('/api/auth', authRoutes);
 app.use('/api/veiculos', vehicleRoutes);
 app.use('/api/reservas', reservationRoutes);
-
+app.use('/api/chatbot', chatbotRoutes);
 // Teste de ligação à BD
 db.query('SELECT 1')
   .then(() => {
