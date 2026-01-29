@@ -1,18 +1,15 @@
-// public/app.js
-
-let todosVeiculos = []; // Guarda a lista completa da API para filtrar localmente
+let todosVeiculos = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-    verificarLogin();      // 1. Verifica o menu e permissões
-    inicializarFrota();    // 2. Carrega os carros
+    verificarLogin();
+    inicializarFrota();
 });
 
-// --- 1. GESTÃO DE LOGIN E MENU (ATUALIZADO) ---
+// --- 1. GESTÃO DE LOGIN E MENU ---
 function verificarLogin() {
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user'));
 
-    // Selecionar os elementos do menu
     const navLogin = document.getElementById('nav-login');
     const navRegistar = document.getElementById('nav-registar');
     const navReservas = document.getElementById('nav-reservas');
@@ -22,7 +19,7 @@ function verificarLogin() {
     const userDisplayName = document.getElementById('user-display-name');
 
     if (token && user) {
-        // --- UTILIZADOR ESTÁ LOGADO ---
+        // --- UTILIZADOR LOGADO ---
         if (navLogin) navLogin.style.display = 'none';
         if (navRegistar) navRegistar.style.display = 'none';
         
@@ -35,13 +32,14 @@ function verificarLogin() {
             userDisplayName.textContent = user.nome || "Utilizador";
         }
 
-        // Mostrar Painel Admin se for Administrador
-        if (navAdmin && (user.role === 'Administrador' || user.role === 'Admin')) {
+        // Mostrar Botão Admin se o cargo for Administrador ou Admin
+        // Ajustado para aceitar várias variações comuns
+        if (navAdmin && (user.role === 'Administrador' || user.role === 'Admin' || user.role === 'admin')) {
             navAdmin.style.display = 'inline-block';
         }
 
     } else {
-        // --- VISITANTE (NÃO LOGADO) ---
+        // --- VISITANTE (DESLOGADO) ---
         if (navLogin) navLogin.style.display = 'inline-block';
         if (navRegistar) navRegistar.style.display = 'inline-block';
         
@@ -79,13 +77,11 @@ async function inicializarFrota() {
 
 async function carregarVeiculos() {
     try {
-        const container = document.getElementById('lista-veiculos');
         const resposta = await fetch('/api/veiculos?v=' + new Date().getTime());
         todosVeiculos = await resposta.json();
-
         renderizarCarros(todosVeiculos);
     } catch (error) {
-        console.error('Erro:', error);
+        console.error('Erro ao carregar veículos:', error);
         const container = document.getElementById('lista-veiculos');
         if(container) container.innerHTML = '<p style="color: red">Erro ao carregar a frota.</p>';
     }
