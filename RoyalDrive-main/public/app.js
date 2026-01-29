@@ -1,44 +1,65 @@
+// public/app.js
+
 let todosVeiculos = []; // Guarda a lista completa da API para filtrar localmente
 
 document.addEventListener('DOMContentLoaded', () => {
-    verificarLogin();
-    inicializarFrota();
+    verificarLogin();      // 1. Verifica o menu
+    inicializarFrota();    // 2. Carrega os carros
 });
 
-// --- 1. GESTÃO DE LOGIN E MENU ---
+// --- 1. GESTÃO DE LOGIN E MENU (ATUALIZADO) ---
 function verificarLogin() {
-    const nome = localStorage.getItem('usuario_nome');
-    const role = localStorage.getItem('usuario_role');
-    const userArea = document.getElementById('user-area');
+    // Agora lemos o objeto 'user' que guardámos no login.js
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user'));
 
-    if (nome) {
-        let html = `<span style="margin-right: 15px; color: #d4af37; font-weight: bold;">Olá, ${nome}</span>`;
+    // Selecionar os elementos do menu pelos IDs novos
+    const navLogin = document.getElementById('nav-login');
+    const navRegistar = document.getElementById('nav-registar');
+    const navReservas = document.getElementById('nav-reservas');
+    const navLogout = document.getElementById('nav-logout');
 
-        if (role === 'Administrador' || role === 'Admin') {
-            html += `
-                <button class="btn" style="background-color: #800000; color: white; margin-right: 10px; padding: 5px 15px;" onclick="window.location.href='admin.html'">
-                    ⚙️ Admin
-                </button>`;
-        }
+    if (token && user) {
+        // --- UTILIZADOR ESTÁ LOGADO ---
+        // Esconde botões de entrar
+        if (navLogin) navLogin.style.display = 'none';
+        if (navRegistar) navRegistar.style.display = 'none';
+        
+        // Mostra botões de cliente
+        if (navReservas) navReservas.style.display = 'inline-block';
+        if (navLogout) navLogout.style.display = 'inline-block';
 
-        html += `
-            <button class="btn" style="margin-right: 10px; padding: 5px 15px;" onclick="window.location.href='minhas-reservas.html'">Reservas</button>
-            <button class="btn" style="background-color: #444; color: white; padding: 5px 15px;" onclick="logout()">Sair</button>`;
+        // Opcional: Se quiseres mostrar o nome nalgum lado (cria um <span id="user-name"> no HTML)
+        // const userNameSpan = document.getElementById('user-name');
+        // if (userNameSpan) userNameSpan.innerText = `Olá, ${user.nome}`;
 
-        userArea.innerHTML = html;
     } else {
-        userArea.innerHTML = `<button class="btn" onclick="window.location.href='login.html'">Login</button>`;
+        // --- VISITANTE (NÃO LOGADO) ---
+        // Mostra botões de entrar
+        if (navLogin) navLogin.style.display = 'inline-block';
+        if (navRegistar) navRegistar.style.display = 'inline-block';
+        
+        // Esconde botões de cliente
+        if (navReservas) navReservas.style.display = 'none';
+        if (navLogout) navLogout.style.display = 'none';
     }
 }
 
 function logout() {
-    localStorage.clear();
-    window.location.reload();
+    // Limpa os dados guardados
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    
+    // Recarrega a página ou vai para a home
+    window.location.href = 'index.html';
 }
 
-// --- 2. CARREGAR E FILTRAR A FROTA ---
+// --- 2. CARREGAR E FILTRAR A FROTA (MANTIDO IGUAL) ---
 
 async function inicializarFrota() {
+    // Só tenta carregar veículos se a lista existir na página (para não dar erro na Home)
+    if (!document.getElementById('lista-veiculos')) return;
+
     await carregarVeiculos();
     
     // Configurar os eventos dos filtros
@@ -64,12 +85,15 @@ async function carregarVeiculos() {
         renderizarCarros(todosVeiculos);
     } catch (error) {
         console.error('Erro:', error);
-        document.getElementById('lista-veiculos').innerHTML = '<p style="color: red">Erro ao carregar a frota.</p>';
+        const container = document.getElementById('lista-veiculos');
+        if(container) container.innerHTML = '<p style="color: red">Erro ao carregar a frota.</p>';
     }
 }
 
 function renderizarCarros(lista) {
     const container = document.getElementById('lista-veiculos');
+    if (!container) return; // Proteção extra
+
     container.innerHTML = ''; 
 
     if (lista.length === 0) {
@@ -111,8 +135,11 @@ function aplicarFiltros() {
     renderizarCarros(filtrados);
 }
 
-// --- 3. LÓGICA DO MAPA ---
+// --- 3. LÓGICA DO MAPA (MANTIDO IGUAL) ---
 window.initMap = async function() {
+    // Se não houver mapa na página, não faz nada
+    if (!document.getElementById("map")) return;
+
     const centroPortugal = { lat: 39.5, lng: -8.0 };
     const map = new google.maps.Map(document.getElementById("map"), {
         zoom: 7,
@@ -152,6 +179,7 @@ window.initMap = async function() {
     }
 }
 
+// --- 4. RESERVAS (MANTIDO IGUAL) ---
 function tentarReservar(idVeiculo) {
     const token = localStorage.getItem('token');
     if (!token) {
