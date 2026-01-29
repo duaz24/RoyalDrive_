@@ -1,6 +1,5 @@
 // controllers/chatbotController.js
 const db = require('../config/db');
-
 exports.processMessage = async (req, res) => {
     const userMessage = req.body.message.toLowerCase();
     let botResponse = "";
