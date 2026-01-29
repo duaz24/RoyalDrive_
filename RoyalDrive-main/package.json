@@ -17,7 +17,8 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "mysql2": "^3.16.0"
+    "mysql2": "^3.16.0",
     "google-auth-library": "^9.x.x",
+    "@google/generative-ai": "^0.3.0"
   }
 }
