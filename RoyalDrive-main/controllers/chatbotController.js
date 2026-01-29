@@ -11,11 +11,12 @@ exports.processMessage = async (req, res) => {
             botResponse = "Olá! Bem-vindo à RoyalDrive. Posso ajudar-te a ver a nossa frota, agências ou contactos.";
         
         } else if (userMessage.includes('carro') || userMessage.includes('frota') || userMessage.includes('veículo') || userMessage.includes('veiculo')) {
-            // CORREÇÃO: Usar a coluna 'disponibilidade' em vez de 'estado'
-            const [rows] = await db.query("SELECT marca, modelo, preco_base_diario FROM veiculos WHERE disponibilidade = 1 LIMIT 3");
+            // CORREÇÃO: Usar 'preco_diario' (conforme erro ER_BAD_FIELD_ERROR) e 'disponibilidade'
+            const [rows] = await db.query("SELECT marca, modelo, preco_diario FROM veiculos WHERE disponibilidade = 1 LIMIT 3");
             
             if (rows.length > 0) {
-                const lista = rows.map(c => `🚗 ${c.marca} ${c.modelo} (${c.preco_base_diario}€/dia)`).join('<br>');
+                // Mapeamento usa c.preco_diario
+                const lista = rows.map(c => `🚗 ${c.marca} ${c.modelo} (${c.preco_diario}€/dia)`).join('<br>');
                 botResponse = `Temos estas máquinas disponíveis:<br>${lista}<br><a href='/frota.html'>Ver toda a frota</a>`;
             } else {
                 botResponse = "De momento estamos com a frota toda reservada! Tenta mais tarde.";
@@ -37,6 +38,7 @@ exports.processMessage = async (req, res) => {
         res.json({ response: botResponse });
 
     } catch (error) {
+        // Log detalhado para o Render
         console.error("Erro no Chatbot:", error);
         res.status(500).json({ response: "Tive um erro interno ao consultar a base de dados. Tenta novamente." });
     }
